@@ -5,7 +5,7 @@ import {Router} from "express";
 
 const router = Router()
 
-router.route("/approve/:id").post(userApprovel,protect);
+router.route("/approve/:id").post(protect,userApprovel);
 
 
 export default router

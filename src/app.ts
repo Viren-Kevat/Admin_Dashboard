@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import userRouter from "./route/user_route";
 import adminRouter from "./route/admin_route"
+import taskRouter from "./route/task_route"
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
@@ -19,6 +20,9 @@ const Port = process.env.PORT || 3000;
 
 app.use("/api",userRouter);
 app.use("/api/admin",adminRouter);
+app.use("/api/task",taskRouter);
+
+
 
 app.get("/", (req, res) => {
   res.send("Helloo Viren");

@@ -16,12 +16,13 @@ export const signupUser = async(req:Request,res:Response):Promise<Response>=>{
         if (typeof execute === "string") {
             return res.status(409).json({ success: false, message: execute });
         }
-        setCookie(execute,res)
+        const token = setCookie(execute,res)
 
         const {id,password,...userWithoutPassword} = execute;
         return res.status(200).json({
             success:true,
-            userWithoutPassword
+            userWithoutPassword,
+            token
         })
     } catch (error) {
         console.log(error);
@@ -46,11 +47,12 @@ export const loginUser = async (req:Request,res:Response):Promise<Response>=>{
         if (!match) {
             return res.status(401).json({success:false,message:"invalide password"})
         }
-
+        const token = setCookie(user,res)
         const{id,password,...userWithoutPassword}= user
         return res.status(200).json({
             success:true,
-            userWithoutPassword
+            userWithoutPassword,
+            token
         })
 
     } catch (error) {
