@@ -1,9 +1,16 @@
-type Role = "admin" | "user"
+import { Request } from "express"
+import { Role } from "../../generated/prisma"
+interface User_Request extends Request{
+  userId?:string
+  role?:Role
+}
+
+// type Role = "admin" | "user"
 
 
 
 interface User{
-    id     :     String   
+  id     :     String   
   username  :  String
   email      : String   
   password    :String
@@ -13,4 +20,4 @@ interface User{
   task :[]
 }
 
-export {User} 
+export {User,User_Request} 

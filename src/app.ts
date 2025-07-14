@@ -21,7 +21,7 @@ const Port = process.env.PORT || 3000;
 app.use("/api",userRouter);
 app.use("/api/admin",adminRouter);
 app.use("/api/task",taskRouter);
-
+app.use("/api/user/task",taskRouter);
 
 
 app.get("/", (req, res) => {
