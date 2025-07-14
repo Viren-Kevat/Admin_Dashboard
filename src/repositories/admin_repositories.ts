@@ -32,3 +32,14 @@ export const is_approved = async(userId : string)=>{
         
     }
 }
+
+export const allUser = async()=>{
+    try {
+        const all = await prisma.user.findMany({})
+        return all;
+    } catch (error) {
+        console.log(error);
+        throw new Error("errror from all user admin repo");
+        
+    }
+}

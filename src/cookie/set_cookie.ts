@@ -4,7 +4,7 @@ import { Response } from "express";
 import { CookieOption,MyResponse } from "../interface/cookie_interface";
 
 
-export const setCookie = (user:User,res:MyResponse):void=>{
+export const setCookie = (user:User,res:MyResponse):string=>{
     let day = parseInt(process.env.JWT_EXPIRE || "7");
     const token = generateToken(user.id,user.role);
     const options :CookieOption= {
@@ -12,5 +12,6 @@ export const setCookie = (user:User,res:MyResponse):void=>{
         httpOnly:true
     }
     user.password="";
-    res.status(200).cookie("token",token,options)
+    res.cookie("token",token,options);
+    return token;
 };

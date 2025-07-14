@@ -5,6 +5,7 @@ import path from "path";
 import userRouter from "./route/user_route";
 import adminRouter from "./route/admin_route"
 import taskRouter from "./route/task_route"
+import cors from "cors";
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
@@ -14,7 +15,10 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 const Port = process.env.PORT || 3000;
 
 
