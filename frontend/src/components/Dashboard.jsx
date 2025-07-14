@@ -296,15 +296,16 @@ export default function Dashboard() {
             />
             <input
               type="date"
-              value={newTask.eod}
+              value={newTask.eod ? newTask.eod.slice(0, 10) : ""}
               onChange={(e) =>
                 setNewTask({
                   ...newTask,
-                  eod: new Date(e.target.value).toISOString(),
+                  eod: new Date(e.target.value).toISOString(), // still store as ISO
                 })
               }
               style={styles.input}
             />
+
             <input
               type="text"
               placeholder="User ID"
@@ -360,6 +361,13 @@ export default function Dashboard() {
                   <b>{task.title}</b>: {task.description}
                   {task.status && (
                     <span style={styles.status}>[{task.status}]</span>
+                  )}
+                  <br />
+                  <br />
+                  {task.assign_To && (
+                    <div>
+                      Assigned To: <strong>{task.assign_To.username}</strong>
+                    </div>
                   )}
                   <br />
                   {task.eod && (

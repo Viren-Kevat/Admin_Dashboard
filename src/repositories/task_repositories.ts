@@ -118,21 +118,31 @@ export const isDone = async (taskId:string,userID:string)=>{
         
     }
 }
+export const allTask = async () => {
+  try {
+    const all = await prisma.task.findMany({
+      include: {
+        assign_To: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
 
-export const allTask = async ()=>{
-    try {
-        const all = await prisma.task.findMany({})
-        if (!all) {
-            throw new Error("no tasks exists");
-            
-        }
-        return all;
-    } catch (error) {
-        console.log(error);
-        throw new Error("error getting all the tasks");
-        
+    if (!all || all.length === 0) {
+      throw new Error("No tasks exist");
     }
-}
+
+    return all;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting all the tasks");
+  }
+};
+
 
 
 export const allTaskForUser = async (userid:string)=>{
