@@ -12,7 +12,7 @@ export const srch = async (id:string)=>{
 }
 export const update = async (data:Partial<Task>,id:string)=>{
     try {
-        console.log(id);
+        // console.log(id);
         
         // const {title,description,eod} = data
         const updateTask : Partial<Task>= {};

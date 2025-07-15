@@ -48,7 +48,7 @@ export const loginUser = async (req:Request,res:Response):Promise<Response>=>{
             return res.status(401).json({success:false,message:"invalide password"})
         }
         const token = setCookie(user,res)
-        console.log(token);
+        // console.log(token);
         
             // ✅ Remove password field safely
     const { password, ...userWithoutPassword } =  user;
