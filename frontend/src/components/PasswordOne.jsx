@@ -17,7 +17,7 @@ export default function ForgotPassword() {
       });
       setStatus(res.data.message || "Reset link sent successfully!");
       setTimeout(() => {
-        navigate("/");
+        navigate(`/enter-password?mail=${email}`);
       }, 2000);
     } catch (error) {
       console.error(error);

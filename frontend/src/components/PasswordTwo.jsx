@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,16 @@ export default function ResetPassword() {
   const [confirm, setConfirm] = useState("");
   const [message, setMessage] = useState("");
   const [otp, setOtp] = useState(""); // Add this line
+  const [resendTimer, setResendTimer] = useState(600); // 10 minutes in seconds
+
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const interval = setInterval(() => {
+      setResendTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +47,27 @@ export default function ResetPassword() {
     } catch (err) {
       console.error(err);
       setMessage("❌ Server error.");
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/sent_Link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setMessage("✅ OTP sent again.");
+        setResendTimer(600); // restart 10 min timer
+      } else {
+        setMessage(data.message || "❌ Failed to resend OTP.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Server error while resending OTP.");
     }
   };
 
@@ -114,6 +145,28 @@ export default function ResetPassword() {
           Reset Password
         </button>
       </form>
+      <button
+        type="button"
+        onClick={handleResendOtp}
+        disabled={resendTimer > 0}
+        style={{
+          marginTop: "1rem",
+          padding: "0.75rem",
+          backgroundColor: resendTimer > 0 ? "#ccc" : "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          fontSize: "1rem",
+          cursor: resendTimer > 0 ? "not-allowed" : "pointer",
+        }}
+      >
+        {resendTimer > 0
+          ? `Resend OTP in ${Math.floor(resendTimer / 60)}:${String(
+              resendTimer % 60
+            ).padStart(2, "0")}`
+          : "Resend OTP"}
+      </button>
+
       {message && (
         <p style={{ marginTop: "1.5rem", textAlign: "center", color: "#444" }}>
           {message}

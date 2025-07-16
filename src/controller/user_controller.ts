@@ -37,12 +37,20 @@ export const sendLinkForPassword = async(req:Request,res:Response)=>{
             process.env.EMAIL as string,
             email,
             "Password reset link",
-            `http://localhost:5173/enter-password?mail=${email}\n\nYour OTP is: ${otp}\n`
+            `OTP is: ${otp}\n \n it will be expire in 10 minutes`
         );
-
+        const expireTime = 10*60*1000;
+        setTimeout(async()=>{
+            await prisma.user.update({
+                where:{email:email},
+                data:{
+                    otp:null,
+                }
+            })
+        },expireTime)
         return res.status(200).json({
             success: true,
-            message: "Mail sent successfully for reset password link",
+            message: "Otp hase been shre to the provided email",
         });
     } catch (error) {
         console.log(error);
