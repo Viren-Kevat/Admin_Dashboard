@@ -2,7 +2,32 @@ import prisma from "../prisma";
 import { User } from "../../generated/prisma";
 
 
-
+export const findUser  = async (userId:string)=>{
+    try {
+        const user = await prisma.user.findFirst({
+            where:{id:userId}
+        })
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error("erro from the user repo");
+        
+    }
+}
+export const passChange = async (email:string,newPass:string)=>{
+    try {
+        const pass = await prisma.user.update({
+            where:{email:email},
+            data:{
+                password:newPass
+            }
+        })
+        return pass;
+    } catch (error) {
+        console.log(error);
+        throw new Error("error from the passCHange")
+    }
+}
 export const sign = async(data:User)=>{
     try {
         let email = data.email;

@@ -66,6 +66,12 @@ export default function Login() {
             Sign up
           </Link>
         </p>
+        <p style={styles.linkText}>
+          Forget Password?{" "}
+          <Link to="/forget-password" style={styles.link}>
+            froget password
+          </Link>
+        </p>
       </form>
     </div>
   );

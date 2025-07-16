@@ -29,7 +29,7 @@ export const userApprovel = async(req:AuthUserId,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error("error from admin controller user approvel");
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -54,7 +54,7 @@ export const getAllUser = async(req:AuthUserId,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error("ERROE from the admin controll");
+   return res.status(500).json({ success: false, message: "Internal Server Error" });
         
     }
 }

@@ -34,6 +34,7 @@ model User {
   created_At  DateTime @default(now())
   is_Approved Boolean  @default(false)
   task        Task[]   @relation("userTasks")
+  otp         String? // optional
 }
 
 model Task {

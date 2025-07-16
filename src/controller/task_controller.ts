@@ -1,9 +1,11 @@
 import { addTask,del ,update,inProgress,srch,isDone,allTask,allTaskForUser} from "../repositories/task_repositories";
 import { json, Request,Response } from "express";
-import { Task } from "../../generated/prisma";
+import { Task, User } from "../../generated/prisma";
 import { AuthUserId } from "../interface/admin_interface";
 import { adminYes } from "../helper/admin_checker";
 import { User_Request } from "../interface/user_interface";
+import { sendMail } from "./mail_controller";
+import { findUser } from "../repositories/user_repositories";
 
 
 export const updateTask = async (req:AuthUserId,res:Response)=>{
@@ -30,7 +32,7 @@ export const updateTask = async (req:AuthUserId,res:Response)=>{
             })
         }catch (error) {
         console.log(error);
-        throw new Error("error from task controller");
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
         
     }
 }
@@ -49,12 +51,17 @@ export const createTask = async (req:AuthUserId,res:Response)=>{
             if (!data) {
                 return res.status(404).json({success:false,message:"incomplete data"})
             }
+            const userData :User |null = await findUser(data.userId)
             const execute = await addTask(data)
-            
+            if (!userData) {
+                return res.status(404).json({success:false,message:"incomplete data of user"})
+            }
+            // sending mail
+            sendMail(process.env.EMAIL as string,userData?.email,data.title,data)
             res.status(200).json({success:true,data:execute})
     } catch (error) {
         console.log(error);
-        throw new Error("error frmm the  task repo"); 
+   return res.status(500).json({ success: false, message: "Internal Server Error" });
         
     }
 }
@@ -82,7 +89,7 @@ export const  removeTask = async (req:AuthUserId,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error("error from the file task controller and remove function");       
+    return res.status(500).json({ success: false, message: "Internal Server Error" });      
         
     }
 }
@@ -115,7 +122,7 @@ export const progress = async (req:User_Request,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error ("errro from file task controller progress")
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -144,7 +151,7 @@ export const done = async (req:User_Request,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error("errro from task controller");
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
         
     }
 }
@@ -160,8 +167,7 @@ export const getAllTask = async(req:Request,res:Response)=>{
         })
     } catch (error) {
         console.log(error);
-        throw new Error("error in getting all the tasks from file task repo");
-        
+return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -195,7 +201,6 @@ export const getAllTaskForUser = async(req:Request,res:Response)=>{
 
     } catch (error) {
         console.log(error);
-        throw new Error("errror from the task controller");
-        
+   return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
